@@ -24,7 +24,7 @@ function addJob() {
   const status = document.getElementById("status").value;
   const date = document.getElementById("date").value;
 
-  if (!company || !role) return alert("Bhai, Details toh bharo!");
+  if (!company || !role) return alert("Please fill the details first!");
   if (status === "Offer") celebrate();
 
   const jobData = {
@@ -130,7 +130,7 @@ function initChart() {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false, // Fix: Container mein fit rahega
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: "bottom",
