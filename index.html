@@ -28,12 +28,11 @@
           <i class="fas fa-robot"></i> Resume AI
         </li>
       </ul>
-
       <div class="sidebar-footer">
-        <button onclick="loadDemoData()" class="btn-secondary">
+        <button id="btnLoadDemo" class="btn-secondary">
           <i class="fas fa-magic"></i> Load Demo
         </button>
-        <button onclick="exportToCSV()" class="btn-secondary">
+        <button id="btnExportCSV" class="btn-secondary">
           <i class="fas fa-download"></i> Export CSV
         </button>
         <button id="toggleMode" class="mode-btn">
@@ -67,10 +66,10 @@
           </div>
           <div class="recent-activity">
             <h3>Quick Tips 💡</h3>
-            <ul>
-              <li>Update keywords for every role.</li>
-              <li>Follow up after 3 days.</li>
-              <li>Export data weekly for backup.</li>
+            <ul id="tipList">
+              <li>Keywords matter for ATS!</li>
+              <li>Follow up after interviews.</li>
+              <li>Check your dashboard daily.</li>
             </ul>
           </div>
         </div>
@@ -85,12 +84,11 @@
               type="text"
               id="search"
               placeholder="Search company or role..."
-              oninput="displayJobs()"
             />
           </div>
           <div class="form-box">
             <input type="text" id="company" placeholder="Company Name" />
-            <input type="text" id="role" placeholder="Role (e.g. React Dev)" />
+            <input type="text" id="role" placeholder="Role (e.g. Developer)" />
             <input type="date" id="date" />
             <select id="status">
               <option>Applied</option>
@@ -108,18 +106,16 @@
 
       <section id="analyzer" class="sec">
         <h1>ATS Resume Analyzer</h1>
-        <div class="analyzer-container">
-          <textarea
-            id="resumeText"
-            placeholder="Paste your resume text here..."
-          ></textarea>
-          <button onclick="analyzeResume()" class="btn-primary">
-            Analyze Score
-          </button>
-          <div id="resultBox" class="result-card hidden">
-            <h2 id="scoreText">0%</h2>
-            <div id="feedbackText"></div>
-          </div>
+        <textarea
+          id="resumeText"
+          placeholder="Paste resume text here..."
+        ></textarea>
+        <button onclick="analyzeResume()" class="btn-primary">
+          Analyze Score
+        </button>
+        <div id="resultBox" class="result-card hidden">
+          <h2 id="scoreText">0%</h2>
+          <div id="feedbackText"></div>
         </div>
       </section>
     </main>
