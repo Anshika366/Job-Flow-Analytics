@@ -1,0 +1,255 @@
+<!-- <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HireTrack PRO+ | Smart Job Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body class="dark-theme">
+    <nav class="sidebar">
+      <div class="logo">
+        <h2>Hire<span>Track</span></h2>
+      </div>
+      <ul>
+        <li onclick="showSection('dashboard')" id="nav-dash" class="active">
+          <i class="fas fa-chart-pie"></i> Dashboard
+        </li>
+        <li onclick="showSection('tracker')" id="nav-track">
+          <i class="fas fa-list"></i> Job Tracker
+        </li>
+        <li onclick="showSection('analyzer')" id="nav-ai">
+          <i class="fas fa-robot"></i> Resume AI
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <button onclick="loadDemoData()" class="btn-secondary">
+          <i class="fas fa-magic"></i> Load Demo
+        </button>
+        <button onclick="exportToCSV()" class="btn-secondary">
+          <i class="fas fa-download"></i> Export CSV
+        </button>
+        <button id="toggleMode" class="mode-btn">
+          <i class="fas fa-sun"></i> Light Mode
+        </button>
+      </div>
+    </nav>
+
+    <main class="content">
+      <section id="dashboard" class="sec active">
+        <h1>Analytics Overview</h1>
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <h3>Applied</h3>
+            <p id="appliedCount">0</p>
+          </div>
+          <div class="stat-card yellow">
+            <h3>Interviews</h3>
+            <p id="interviewCount">0</p>
+          </div>
+          <div class="stat-card green">
+            <h3>Offers</h3>
+            <p id="offerCount">0</p>
+          </div>
+        </div>
+        <div class="main-stats-row">
+          <div class="chart-box">
+            <canvas id="jobChart"></canvas>
+          </div>
+          <div class="recent-activity">
+            <h3>Quick Tips 💡</h3>
+            <ul>
+              <li>Keep your resume keywords updated.</li>
+              <li>Follow up after 3 days of interview.</li>
+              <li>Export your data weekly for backup.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="tracker" class="sec">
+        <div class="header-flex">
+          <h1>Application Tracker</h1>
+          <input
+            type="text"
+            id="search"
+            placeholder="🔍 Search company or role..."
+            oninput="displayJobs()"
+          />
+        </div>
+
+        <div class="form-box">
+          <input type="text" id="company" placeholder="Company Name" />
+          <input type="text" id="role" placeholder="Role (e.g. React Dev)" />
+          <input type="date" id="date" />
+          <select id="status">
+            <option>Applied</option>
+            <option>Interview</option>
+            <option>Offer</option>
+            <option>Rejected</option>
+          </select>
+          <button onclick="addJob()" id="addBtn" class="btn-primary">
+            Add Application
+          </button>
+        </div>
+
+        <div id="jobList" class="job-grid"></div>
+      </section>
+
+      <section id="analyzer" class="sec">
+        <h1>ATS Resume Analyzer</h1>
+        <div class="analyzer-container">
+          <textarea
+            id="resumeText"
+            placeholder="Paste your resume text here to check ATS compatibility..."
+          ></textarea>
+          <button onclick="analyzeResume()" class="btn-primary">
+            Analyze Score
+          </button>
+          <div id="resultBox" class="result-card hidden">
+            <h2 id="scoreText">0%</h2>
+            <div id="feedbackText"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html> -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HireTrack PRO+ | Smart Job Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body class="dark-theme">
+    <nav class="sidebar">
+      <div class="logo">
+        <h2>Hire<span>Track</span></h2>
+      </div>
+      <ul>
+        <li onclick="showSection('dashboard')" id="nav-dash" class="active">
+          <i class="fas fa-chart-pie"></i> Dashboard
+        </li>
+        <li onclick="showSection('tracker')" id="nav-track">
+          <i class="fas fa-list"></i> Job Tracker
+        </li>
+        <li onclick="showSection('analyzer')" id="nav-ai">
+          <i class="fas fa-robot"></i> Resume AI
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <button onclick="loadDemoData()" class="btn-secondary">
+          <i class="fas fa-magic"></i> Load Demo
+        </button>
+        <button onclick="exportToCSV()" class="btn-secondary">
+          <i class="fas fa-download"></i> Export CSV
+        </button>
+        <button id="toggleMode" class="mode-btn">
+          <i class="fas fa-sun"></i> Light Mode
+        </button>
+      </div>
+    </nav>
+
+    <main class="content">
+      <section id="dashboard" class="sec active">
+        <h1>Analytics Overview</h1>
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <h3>Applied</h3>
+            <p id="appliedCount">0</p>
+          </div>
+          <div class="stat-card yellow">
+            <h3>Interviews</h3>
+            <p id="interviewCount">0</p>
+          </div>
+          <div class="stat-card green">
+            <h3>Offers</h3>
+            <p id="offerCount">0</p>
+          </div>
+        </div>
+        <div class="main-stats-row">
+          <div class="chart-box">
+            <div class="canvas-wrapper">
+              <canvas id="jobChart"></canvas>
+            </div>
+          </div>
+          <div class="recent-activity">
+            <h3>Quick Tips 💡</h3>
+            <ul>
+              <li>Update keywords for every role.</li>
+              <li>Follow up after 3 days.</li>
+              <li>Export data weekly for backup.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="tracker" class="sec">
+        <h1>Application Tracker</h1>
+        <div class="tracker-controls">
+          <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              id="search"
+              placeholder="Search company or role..."
+              oninput="displayJobs()"
+            />
+          </div>
+          <div class="form-box">
+            <input type="text" id="company" placeholder="Company Name" />
+            <input type="text" id="role" placeholder="Role (e.g. React Dev)" />
+            <input type="date" id="date" />
+            <select id="status">
+              <option>Applied</option>
+              <option>Interview</option>
+              <option>Offer</option>
+              <option>Rejected</option>
+            </select>
+            <button onclick="addJob()" id="addBtn" class="btn-primary">
+              Add Application
+            </button>
+          </div>
+        </div>
+        <div id="jobList" class="job-grid"></div>
+      </section>
+
+      <section id="analyzer" class="sec">
+        <h1>ATS Resume Analyzer</h1>
+        <div class="analyzer-container">
+          <textarea
+            id="resumeText"
+            placeholder="Paste your resume text here..."
+          ></textarea>
+          <button onclick="analyzeResume()" class="btn-primary">
+            Analyze Score
+          </button>
+          <div id="resultBox" class="result-card hidden">
+            <h2 id="scoreText">0%</h2>
+            <div id="feedbackText"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
