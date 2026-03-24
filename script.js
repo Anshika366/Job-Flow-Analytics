@@ -9,13 +9,26 @@ function showSection(id) {
   document
     .querySelectorAll(".sidebar li")
     .forEach((l) => l.classList.remove("active"));
+
   document.getElementById(id).classList.add("active");
-  document.getElementById("nav-" + id.substring(0, 3)).classList.add("active");
-  if (id === "dashboard") updateStats();
+
+  const navId = "nav-" + id.substring(0, 3);
+  if (document.getElementById(navId)) {
+    document.getElementById(navId).classList.add("active");
+  }
+
+  if (id === "dashboard") {
+    updateStats();
+  }
 }
 
 function celebrate() {
-  confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+  confetti({
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.6 },
+    colors: ["#6366f1", "#22c55e", "#ffffff"],
+  });
 }
 
 function addJob() {
@@ -24,7 +37,10 @@ function addJob() {
   const status = document.getElementById("status").value;
   const date = document.getElementById("date").value;
 
-  if (!company || !role) return alert("Please fill the details first!");
+  if (!company || !role) {
+    return alert("Please enter both the company name and the job role!");
+  }
+
   if (status === "Offer") celebrate();
 
   const jobData = {
@@ -43,14 +59,19 @@ function addJob() {
   }
 
   localStorage.setItem("jobs", JSON.stringify(jobs));
+
   document.getElementById("company").value = "";
   document.getElementById("role").value = "";
+
   displayJobs();
+  updateStats();
 }
 
 function displayJobs() {
   const list = document.getElementById("jobList");
-  const searchTerm = document.getElementById("search").value.toLowerCase();
+  const searchElement = document.getElementById("search");
+  const searchTerm = searchElement ? searchElement.value.toLowerCase() : "";
+
   list.innerHTML = "";
 
   jobs.forEach((job, index) => {
@@ -68,19 +89,21 @@ function displayJobs() {
                     <small style="color:#94a3b8">${job.date} | <b>${job.status}</b></small>
                 </div>
                 <div>
-                    <button onclick="editJob(${index})" class="btn-edit"><i class="fas fa-edit"></i></button>
-                    <button onclick="deleteJob(${index})" class="btn-del"><i class="fas fa-trash"></i></button>
+                    <button onclick="editJob(${index})" class="btn-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteJob(${index})" class="btn-del" title="Delete"><i class="fas fa-trash"></i></button>
                 </div>
             </div>`;
   });
-  updateStats();
 }
 
 function deleteJob(index) {
-  if (confirm("Are you sure you want to delete this application?")) {
+  if (
+    confirm("Are you sure you want to permanently delete this application?")
+  ) {
     jobs.splice(index, 1);
     localStorage.setItem("jobs", JSON.stringify(jobs));
     displayJobs();
+    updateStats();
   }
 }
 
@@ -90,14 +113,17 @@ function editJob(index) {
   document.getElementById("role").value = job.role;
   document.getElementById("status").value = job.status;
   document.getElementById("date").value = job.date;
+
   editIndex = index;
-  document.getElementById("addBtn").innerText = "Update Job";
+  document.getElementById("addBtn").innerText = "Update Job Details";
   showSection("tracker");
 }
 
 function updateStats() {
   const stats = { Applied: 0, Interview: 0, Offer: 0, Rejected: 0 };
-  jobs.forEach((j) => stats[j.status]++);
+  jobs.forEach((j) => {
+    if (stats[j.status] !== undefined) stats[j.status]++;
+  });
 
   document.getElementById("appliedCount").innerText = stats.Applied;
   document.getElementById("interviewCount").innerText = stats.Interview;
@@ -140,6 +166,7 @@ function initChart() {
       cutout: "70%",
     },
   });
+  updateStats();
 }
 
 function analyzeResume() {
@@ -153,51 +180,77 @@ function analyzeResume() {
     "git",
     "sql",
     "api",
+    "python",
+    "java",
+    "aws",
+    "docker",
   ];
   let matched = skills.filter((s) => text.includes(s));
+
   const score = Math.round((matched.length / skills.length) * 100);
 
-  document.getElementById("resultBox").classList.remove("hidden");
-  document.getElementById("scoreText").innerText = `ATS Score: ${score}%`;
+  const resultBox = document.getElementById("resultBox");
+  resultBox.classList.remove("hidden");
+  document.getElementById("scoreText").innerText =
+    `ATS Compatibility Score: ${score}%`;
   document.getElementById("feedbackText").innerHTML =
-    matched.length > 0 ? `Found: ${matched.join(", ")}` : "No skills detected.";
-}
-
-function exportToCSV() {
-  let csv = "Company,Role,Status,Date\n";
-  jobs.forEach(
-    (j) => (csv += `${j.company},${j.role},${j.status},${j.date}\n`),
-  );
-  const blob = new Blob([csv], { type: "text/csv" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "my_jobs.csv";
-  a.click();
+    matched.length > 0
+      ? `<strong>Keywords Identified:</strong> ${matched.join(", ")}`
+      : "No technical keywords detected. Please optimize your resume.";
 }
 
 function loadDemoData() {
   jobs = [
     {
       company: "Google",
-      role: "Frontend Dev",
+      role: "Frontend Developer",
       status: "Interview",
-      date: "2024-03-24",
+      date: "2026-03-24",
     },
-    { company: "Amazon", role: "SDE-1", status: "Offer", date: "2024-03-20" },
+    { company: "Amazon", role: "SDE-1", status: "Offer", date: "2026-03-20" },
     {
       company: "Meta",
-      role: "React Dev",
+      role: "React Architect",
       status: "Applied",
-      date: "2024-03-22",
+      date: "2026-03-22",
+    },
+    {
+      company: "Netflix",
+      role: "UI Engineer",
+      status: "Rejected",
+      date: "2026-03-15",
     },
   ];
+
   localStorage.setItem("jobs", JSON.stringify(jobs));
   displayJobs();
+  updateStats();
+
+  alert(
+    "Demo data has been loaded successfully! Please check the Dashboard and Tracker.",
+  );
+}
+
+function exportToCSV() {
+  if (jobs.length === 0)
+    return alert("There is no application data to export!");
+
+  let csv = "Company,Role,Status,Date\n";
+  jobs.forEach(
+    (j) => (csv += `${j.company},${j.role},${j.status},${j.date}\n`),
+  );
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "job_tracker_export.csv";
+  a.click();
 }
 
 document.getElementById("toggleMode").onclick = function () {
   document.body.classList.toggle("light-theme");
-  this.innerHTML = document.body.classList.contains("light-theme")
+  const isLight = document.body.classList.contains("light-theme");
+  this.innerHTML = isLight
     ? '<i class="fas fa-moon"></i> Dark Mode'
     : '<i class="fas fa-sun"></i> Light Mode';
 };
